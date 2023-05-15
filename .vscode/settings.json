@@ -1,0 +1,14 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "crs.unochapeco.edu.br",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "crs",
+      "username": "postgres",
+      "database": "postgres"
+    }
+  ]
+}
