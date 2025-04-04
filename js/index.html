@@ -11,7 +11,7 @@
   <form action="row" id="formulario">
     <div class="container mt-3">
       <div class="row">
-        <div class="col-10">
+        <div class="col-8">
           <div class="container">
             <label for="inputNome" class="form-label"> Coloque Seu Nome </label>
             <input required type="text" name="inputNome" id="inputNome" class="form-control">
@@ -19,8 +19,8 @@
         </div>
         <div class="col">
           <div class="container">
-            <label for="inputIdade" class="form-label">Informe Sua idade</label>
-            <input type="number" name="inputIdade" id="inputIdade" class="form-control">
+            <label for="inputData" class="form-label">Informe Sua Data</label>
+            <input type="date" locale="pt-BR" name="inputData" id="inputData" class="form-control">
           </div>
         </div>
       </div>
@@ -30,15 +30,15 @@
     </div>
   </form>
   <div class="container text-center mt-2">
-    <table id="tabelaRegistro" >
-      <tr>
+    <table id="tabelaRegistro" style="width: 100%;">
+      <div>
         <th>
           Nome
         </th>
         <th>
-          Idade
+          Data
         </th>
-      </tr>
+      </div>
     </table>
   </div>
   <script src="./index.js"></script>

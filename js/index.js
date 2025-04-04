@@ -1,48 +1,70 @@
-let formulario = document.getElementById('formulario')
-let registros = document.getElementById('tabelaRegistro')
+document.addEventListener('DOMContentLoaded', () => {
+  const formulario = document.getElementById('formulario');
+  const tabela = document.getElementById('tabelaRegistro');
+  const registrosLista = [];
 
-formulario.addEventListener('submit', (evento) => {
-  evento.preventDefault()
-  let endereco = $('#formulario').serializeArray();
-  endereco = arrayToObject(endereco);
+  formulario.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-  console.log(localStorage.getItem('dados'));
+    let nome = document.getElementById('inputNome').value.trim();
+    let Data = document.getElementById('inputData').value.trim();
+    const [ano, mes, dia] = Data.split('-')
+    Data = `${dia}/${mes}/${ano}`
 
-  let itens = JSON.parse(localStorage.getItem('dados')) || [];
 
-  let produtosDuplicados = itens
-        .map(produtos => (JSON.parse(produtos)).inputNome)
-        .includes(endereco.inputNome);
+    if (!nome) {
+      alert("Por favor, preencha o nome.");
+      return;
+    }
 
-        console.log(produtosDuplicados);
+    if (verificaDuplicado(nome)) {
+      alert("Esse nome já foi cadastrado.");
+      return;
+    }
 
-  if (produtosDuplicados) {
-    return alert(`O usuario com nome ${endereco.inputNome}`);
+    const novoRegistro = { inputNome: nome, inputData: Data, finalizado: false};
+
+    registrosLista.push(novoRegistro);
+    atualizarTabela();
+
+    formulario.reset();
+  });
+
+  window.excluirRegistro = function (index) {
+    registrosLista.splice(index, 1); // remove do vetor
+    atualizarTabela(); // atualiza a tabela
+  };
+
+  window.finalizarRegistro = function (index) {
+    registrosLista[index].finalizado = true; // remove do vetor
+    atualizarTabela(); // atualiza a tabela
+  };
+
+  function atualizarTabela() {
+    tabela.innerHTML = `
+      <tr>
+        <th>Nome</th>
+        <th>Data</th>
+        <th>Ações</th>
+      </tr>
+    `;
+
+    registrosLista.forEach((item, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.inputNome}</td>
+        <td>${item.inputData}</td>
+        <td>
+          <button class="btn btn-success btn-sm" onclick="finalizarRegistro(${index})">finalizar</button>
+          <button class="btn btn-danger btn-sm" onclick="excluirRegistro(${index})">Excluir</button>
+        </td>
+      `;
+      item.finalizado ? tr.style.backgroundColor = 'green' : null;
+      tabela.appendChild(tr);
+    });
   }
 
-  console.log(itens);
-  itens.push(endereco);
-  localStorage.setItem('dados', JSON.stringify(itens));
-
-  adicionarProdutoTabela(endereco);
+  function verificaDuplicado(nome) {
+    return registrosLista.some(registro => registro.inputNome.toLowerCase() === nome.toLowerCase());
+  }
 });
-
-function adicionarProdutoTabela (item) {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <tr>
-      <td>${item.inputNome}</td>
-      <td>${item.inputIdade}</td>
-    </tr>
-  `
-  registros.appendChild(tr)
-}
-
-function arrayToObject(array){
-  let object = {};
-  array.forEach(campo => {
-      object[campo.name] = campo.value;
-  });
-  return object
-}
-
